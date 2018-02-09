@@ -99,10 +99,10 @@ func main() {
 	f := GetHourlyForecasts(config.KeyID, config.CountryOrState, config.Location)
 
 	// Show today's (0:00-11:00) or tomorrow's (12:00-0:00) forecast.
-	now := time.Now()
+	now := time.Now().UTC()
 	var day int
 	var month time.Month
-	if now.Hour() < 12 {
+	if now.Hour() < 11 {
 		_, month, day = now.Date()
 	} else {
 		_, month, day = now.Add(24 * time.Hour).Date()
