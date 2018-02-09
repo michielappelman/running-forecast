@@ -27,3 +27,8 @@ config.json
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+# dep-related files
+vendor
+Gopkg.lock
+Gopkg.toml
