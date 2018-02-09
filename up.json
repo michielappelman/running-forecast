@@ -1,0 +1,10 @@
+{
+  "name": "running-forecast",
+  "profile": "default",
+  "lambda": {
+      "memory": 128
+  },
+  "regions": [
+    "eu-central-1"
+  ]
+}
