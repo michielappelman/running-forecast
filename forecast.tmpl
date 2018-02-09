@@ -29,14 +29,14 @@
               {{range .forecasts}}
                 <div class="row align-items-center" style="border-bottom: 1px solid black; margin-bottom: 10px">
                   <div class="col-xs-6 col-3">
-                    <h4>⏰ {{ .Time.Hour }}:00</h4>
+                    <h4>⏰ {{ .FCTTIME.Hour }}:00</h4>
                   </div><div class="col-xs-6 col-9">
                     <div class="row align-items-center">
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <p>{{ .Condition }} (☔️ {{ .PercpForecast }}%)</p>
-                        <p><span class="h4">🌡 </span><em>Real:</em> <span class="h4">{{ .TempForecast.Temp }}&deg;</span> <em>Feel:</em> <span class="h4">{{ .FeelsLikeForecast.FeelsLike }}&deg;</span></p>
+                        <p>{{ .Condition }} (☔️ {{ .Pop }}%)</p>
+                        <p><span class="h4">🌡 </span><em>Real:</em> <span class="h4">{{ .Temp.Metric }}&deg;</span> <em>Feel:</em> <span class="h4">{{ .Feelslike.Metric }}&deg;</span></p>
                       </div><div class="col-sm-6 d-none d-sm-block">
-                        <p>💨 {{ .WindSpeedForecast.WindSpeed }} {{ .WindDirForecast.WindDir }}</p>
+                        <p>💨 {{ .Wspd.Metric }} {{ .Wdir.Dir }}</p>
                         <p>💦 {{ .Humidity }}%</p>
                       </div>
                     </div>

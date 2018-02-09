@@ -7,8 +7,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
+	"github.com/LoganK/go-wunderground"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,67 +21,24 @@ type Configuration struct {
 	Location       string `json:"location"`
 }
 
-type Wunderground struct {
-	HourlyForecasts []HourlyForecast `json:"hourly_forecast"`
-}
-
-type Time struct {
-	Hour  int    `json:"hour,string"`
-	Day   int    `json:"mday,string"`
-	Month string `json:"month_name_abbrev"`
-}
-
-type TempForecast struct {
-	Temp int `json:"metric,string"`
-}
-
-type FeelsLikeForecast struct {
-	FeelsLike int `json:"metric,string"`
-}
-
-type WindSpeedForecast struct {
-	WindSpeed int `json:"metric,string"`
-}
-
-type WindDirForecast struct {
-	WindDir string `json:"dir"`
-}
-
-type HourlyForecast struct {
-	Time              Time              `json:"FCTTIME"`
-	Humidity          int               `json:"humidity,string"`
-	Condition         string            `json:"condition"`
-	TempForecast      TempForecast      `json:"temp"`
-	FeelsLikeForecast FeelsLikeForecast `json:"feelslike"`
-	PercpForecast     int               `json:"pop,string"`
-	WindSpeedForecast WindSpeedForecast `json:"wspd"`
-	WindDirForecast   WindDirForecast   `json:"wdir"`
-}
-
-func GetHourlyForecasts(key, country, loc string) []HourlyForecast {
-	url := fmt.Sprintf("https://api.wunderground.com/api/%s/hourly/q/%s/%s.json", key, country, loc)
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+func GetHourlyForecasts(key, country, city string) *wunderground.HourlyForecast {
+	q := wunderground.Query{Country: country, City: city}
+	w := wunderground.NewService(key)
+	a, err := w.Request([]string{"hourly"}, &q)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var w Wunderground
-	if err := json.Unmarshal(body, &w); err != nil {
-		log.Fatal(err)
-	}
-	return w.HourlyForecasts
+	return a.HourlyForecast
 }
 
-func FilterForecasts(forecasts []HourlyForecast, day, startHour, endHour int) []HourlyForecast {
-	var f []HourlyForecast
-	for _, h := range forecasts {
-		if h.Time.Day == day && h.Time.Hour >= startHour && h.Time.Hour <= endHour {
-			f = append(f, h)
+func FilterForecasts(forecasts *wunderground.HourlyForecast, day, startHour, endHour int) wunderground.HourlyForecast {
+	var f wunderground.HourlyForecast
+	for _, hourly := range *forecasts {
+		d, _ := strconv.Atoi(hourly.FCTTIME.Mday)
+		h, _ := strconv.Atoi(hourly.FCTTIME.Hour)
+		if d == day && h >= startHour && h <= endHour {
+			f = append(f, hourly)
 		}
 	}
 	return f
