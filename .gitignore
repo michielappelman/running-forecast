@@ -1,6 +1,9 @@
 # Ignore all
 *
 
+# Unignore License file
+!LICENSE
+
 # Unignore all with extensions
 !*.*
 
